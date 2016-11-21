@@ -209,7 +209,7 @@ grammar_json_4b = [
     (obj, (LP, members, RP)),
     (members, (keyvalue,)),
     (members, (members, COMMA, memProxy)),
-    (memProxy, (members,)),
+    (memProxy, (keyvalue,)),
     (keyvalue, (STRING, COLON, value)),
     (value, (STRING,)),
     (value, (INT,)),
@@ -217,11 +217,12 @@ grammar_json_4b = [
 ]
 
 grammar_json_4c = [
-    (obj, (LP, RP)),
-    (obj, (LP, members, RP)),
-    (members, (keyvalue,)),
-    (members, (members, COMMA, memProxy)),
-    (memProxy, (members,)),
+    (obj, (LP, S, RP)),
+    (S, (members,)),
+    (S, ()),
+    (members, (keyvalue, memProxy)),
+    (memProxy, (COMMA, members)),
+    (memProxy, ()),
     (keyvalue, (STRING, COLON, value)),
     (value, (STRING,)),
     (value, (INT,)),
