@@ -194,8 +194,8 @@ def analyze_grammar(grammar):
 
 
 grammar_json_4a = [
-    (obj, (LP, RP)),
-    (obj, (LP, members, RP)),
+    (obj, (LB, RB)),
+    (obj, (LB, members, RB)),
     (members, (keyvalue,)),
     (members, (members, COMMA, members)),
     (keyvalue, (STRING, COLON, value)),
@@ -205,11 +205,11 @@ grammar_json_4a = [
 ]
 
 grammar_json_4b = [
-    (obj, (LP, RP)),
-    (obj, (LP, members, RP)),
+    (obj, (LB, RB)),
+    (obj, (LB, members, RB)),
     (members, (keyvalue,)),
-    (members, (members, COMMA, memProxy)),
-    (memProxy, (keyvalue,)),
+    (members, (members, COMMA, members_tag)),
+    (members_tag, (keyvalue,)),
     (keyvalue, (STRING, COLON, value)),
     (value, (STRING,)),
     (value, (INT,)),
@@ -217,12 +217,12 @@ grammar_json_4b = [
 ]
 
 grammar_json_4c = [
-    (obj, (LP, S, RP)),
-    (S, (members,)),
-    (S, ()),
-    (members, (keyvalue, memProxy)),
-    (memProxy, (COMMA, members)),
-    (memProxy, ()),
+    (obj, (LB, obj_tag)),
+    (obj_tag, (members,)),
+    (obj_tag, (RB,)),
+    (members, (keyvalue, members_tag)),
+    (members_tag, (COMMA, members)),
+    (members_tag, (RB)),
     (keyvalue, (STRING, COLON, value)),
     (value, (STRING,)),
     (value, (INT,)),

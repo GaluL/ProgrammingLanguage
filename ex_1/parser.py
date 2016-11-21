@@ -97,10 +97,13 @@ class JsonParser(Parser):
             raise SyntaxError("Syntax error: no rule for token: {}".format(self.t))
 
     def parse_obj(self):
-        #
-        # --- CHANGE THE BODY OF THIS FUNCTION ---
-        #
-        pass
+        if self.t in [LB]:
+            c1 = self.match(LB)
+            c2 = self.parse_obj_tag()
+        else:
+            raise SyntaxError("Syntax error: no rule for token: {}".format(self.t))
+
+    def parse_obj_tag(self):
 
     #
     # --- FILL IN MORE parse_XXX FUNCTIONS HERE ---

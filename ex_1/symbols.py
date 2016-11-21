@@ -43,4 +43,5 @@ value = 'value'
 #
 # --- ADD MORE NONTERMINALS HERE IF NEEDED IN QUESTION 5
 #
-memProxy = 'memProxy'
+members_tag = 'members_tag'
+obj_tag = 'obj_tag'

@@ -41,8 +41,8 @@ Grammar is LL(1).
 
 
 Analyzing grammar:
-    obj -> LP RP
-    obj -> LP members RP
+    obj -> LB RB
+    obj -> LB members RB
     members -> keyvalue
     members -> members COMMA members
     keyvalue -> STRING COLON value
@@ -50,7 +50,7 @@ Analyzing grammar:
     value -> INT
     value -> obj
 
-terminals =  set(['RP', 'STRING', 'INT', 'COLON', 'LP', 'COMMA'])
+terminals =  set(['LB', 'STRING', 'INT', 'COLON', 'RB', 'COMMA'])
 nonterminals =  set(['keyvalue', 'obj', 'value', 'members'])
 
 nullable =  set([])
@@ -58,135 +58,137 @@ nullable =  set([])
 first(COLON) = set(['COLON'])
 first(COMMA) = set(['COMMA'])
 first(INT) = set(['INT'])
-first(LP) = set(['LP'])
-first(RP) = set(['RP'])
+first(LB) = set(['LB'])
+first(RB) = set(['RB'])
 first(STRING) = set(['STRING'])
 first(keyvalue) = set(['STRING'])
 first(members) = set(['STRING'])
-first(obj) = set(['LP'])
-first(value) = set(['INT', 'STRING', 'LP'])
+first(obj) = set(['LB'])
+first(value) = set(['INT', 'LB', 'STRING'])
 
-follow(keyvalue) = set(['COMMA', 'RP'])
-follow(members) = set(['COMMA', 'RP'])
-follow(obj) = set(['COMMA', 'RP', 'EOF'])
-follow(value) = set(['COMMA', 'RP'])
+follow(keyvalue) = set(['COMMA', 'RB'])
+follow(members) = set(['COMMA', 'RB'])
+follow(obj) = set(['COMMA', 'EOF', 'RB'])
+follow(value) = set(['COMMA', 'RB'])
 
 select(keyvalue -> STRING COLON value) = set(['STRING'])
 select(members -> keyvalue) = set(['STRING'])
 select(members -> members COMMA members) = set(['STRING'])
-select(obj -> LP RP) = set(['LP'])
-select(obj -> LP members RP) = set(['LP'])
+select(obj -> LB RB) = set(['LB'])
+select(obj -> LB members RB) = set(['LB'])
 select(value -> INT) = set(['INT'])
 select(value -> STRING) = set(['STRING'])
-select(value -> obj) = set(['LP'])
+select(value -> obj) = set(['LB'])
 
 Grammar is not LL(1), as the following rules have intersecting SELECT sets:
-    obj -> LP RP
-    obj -> LP members RP
+    obj -> LB RB
+    obj -> LB members RB
 Grammar is not LL(1), as the following rules have intersecting SELECT sets:
     members -> keyvalue
     members -> members COMMA members
 
 
 Analyzing grammar:
-    obj -> LP RP
-    obj -> LP members RP
+    obj -> LB RB
+    obj -> LB members RB
     members -> keyvalue
-    members -> members COMMA memProxy
-    memProxy -> keyvalue
+    members -> members COMMA members_tag
+    members_tag -> keyvalue
     keyvalue -> STRING COLON value
     value -> STRING
     value -> INT
     value -> obj
 
-terminals =  set(['RP', 'STRING', 'INT', 'COLON', 'LP', 'COMMA'])
-nonterminals =  set(['keyvalue', 'value', 'obj', 'memProxy', 'members'])
+terminals =  set(['LB', 'STRING', 'INT', 'COLON', 'RB', 'COMMA'])
+nonterminals =  set(['keyvalue', 'obj', 'value', 'members', 'members_tag'])
 
 nullable =  set([])
 
 first(COLON) = set(['COLON'])
 first(COMMA) = set(['COMMA'])
 first(INT) = set(['INT'])
-first(LP) = set(['LP'])
-first(RP) = set(['RP'])
+first(LB) = set(['LB'])
+first(RB) = set(['RB'])
 first(STRING) = set(['STRING'])
 first(keyvalue) = set(['STRING'])
-first(memProxy) = set(['STRING'])
 first(members) = set(['STRING'])
-first(obj) = set(['LP'])
-first(value) = set(['INT', 'STRING', 'LP'])
+first(members_tag) = set(['STRING'])
+first(obj) = set(['LB'])
+first(value) = set(['INT', 'LB', 'STRING'])
 
-follow(keyvalue) = set(['COMMA', 'RP'])
-follow(memProxy) = set(['COMMA', 'RP'])
-follow(members) = set(['COMMA', 'RP'])
-follow(obj) = set(['COMMA', 'RP', 'EOF'])
-follow(value) = set(['COMMA', 'RP'])
+follow(keyvalue) = set(['COMMA', 'RB'])
+follow(members) = set(['COMMA', 'RB'])
+follow(members_tag) = set(['COMMA', 'RB'])
+follow(obj) = set(['COMMA', 'EOF', 'RB'])
+follow(value) = set(['COMMA', 'RB'])
 
 select(keyvalue -> STRING COLON value) = set(['STRING'])
-select(memProxy -> keyvalue) = set(['STRING'])
 select(members -> keyvalue) = set(['STRING'])
-select(members -> members COMMA memProxy) = set(['STRING'])
-select(obj -> LP RP) = set(['LP'])
-select(obj -> LP members RP) = set(['LP'])
+select(members -> members COMMA members_tag) = set(['STRING'])
+select(members_tag -> keyvalue) = set(['STRING'])
+select(obj -> LB RB) = set(['LB'])
+select(obj -> LB members RB) = set(['LB'])
 select(value -> INT) = set(['INT'])
 select(value -> STRING) = set(['STRING'])
-select(value -> obj) = set(['LP'])
+select(value -> obj) = set(['LB'])
 
 Grammar is not LL(1), as the following rules have intersecting SELECT sets:
-    obj -> LP RP
-    obj -> LP members RP
+    obj -> LB RB
+    obj -> LB members RB
 Grammar is not LL(1), as the following rules have intersecting SELECT sets:
     members -> keyvalue
-    members -> members COMMA memProxy
+    members -> members COMMA members_tag
 
 
 Analyzing grammar:
-    obj -> LP S RP
-    S -> members
-    S -> 
-    members -> keyvalue memProxy
-    memProxy -> COMMA members
-    memProxy -> 
+    obj -> LB obj_tag
+    obj_tag -> members
+    obj_tag -> RB
+    members -> keyvalue members_tag
+    members_tag -> COMMA members
+    members_tag -> R B
     keyvalue -> STRING COLON value
     value -> STRING
     value -> INT
     value -> obj
 
-terminals =  set(['RP', 'STRING', 'INT', 'COLON', 'LP', 'COMMA'])
-nonterminals =  set(['obj', 'memProxy', 'value', 'S', 'keyvalue', 'members'])
+terminals =  set(['B', 'LB', 'STRING', 'INT', 'R', 'COLON', 'RB', 'COMMA'])
+nonterminals =  set(['obj', 'value', 'keyvalue', 'members', 'obj_tag', 'members_tag'])
 
-nullable =  set(['S', 'memProxy'])
+nullable =  set([])
 
+first(B) = set(['B'])
 first(COLON) = set(['COLON'])
 first(COMMA) = set(['COMMA'])
 first(INT) = set(['INT'])
-first(LP) = set(['LP'])
-first(RP) = set(['RP'])
-first(S) = set(['STRING'])
+first(LB) = set(['LB'])
+first(R) = set(['R'])
+first(RB) = set(['RB'])
 first(STRING) = set(['STRING'])
 first(keyvalue) = set(['STRING'])
-first(memProxy) = set(['COMMA'])
 first(members) = set(['STRING'])
-first(obj) = set(['LP'])
-first(value) = set(['INT', 'STRING', 'LP'])
+first(members_tag) = set(['R', 'COMMA'])
+first(obj) = set(['LB'])
+first(obj_tag) = set(['STRING', 'RB'])
+first(value) = set(['INT', 'LB', 'STRING'])
 
-follow(S) = set(['RP'])
-follow(keyvalue) = set(['COMMA', 'RP'])
-follow(memProxy) = set(['RP'])
-follow(members) = set(['RP'])
-follow(obj) = set(['COMMA', 'RP', 'EOF'])
-follow(value) = set(['RP', 'COMMA'])
+follow(keyvalue) = set(['R', 'COMMA'])
+follow(members) = set(['R', 'COMMA', 'EOF'])
+follow(members_tag) = set(['R', 'COMMA', 'EOF'])
+follow(obj) = set(['R', 'COMMA', 'EOF'])
+follow(obj_tag) = set(['R', 'COMMA', 'EOF'])
+follow(value) = set(['R', 'COMMA'])
 
-select(S -> ) = set(['RP'])
-select(S -> members) = set(['STRING'])
 select(keyvalue -> STRING COLON value) = set(['STRING'])
-select(memProxy -> ) = set(['RP'])
-select(memProxy -> COMMA members) = set(['COMMA'])
-select(members -> keyvalue memProxy) = set(['STRING'])
-select(obj -> LP S RP) = set(['LP'])
+select(members -> keyvalue members_tag) = set(['STRING'])
+select(members_tag -> R B) = set(['R'])
+select(members_tag -> COMMA members) = set(['COMMA'])
+select(obj -> LB obj_tag) = set(['LB'])
+select(obj_tag -> RB) = set(['RB'])
+select(obj_tag -> members) = set(['STRING'])
 select(value -> INT) = set(['INT'])
 select(value -> STRING) = set(['STRING'])
-select(value -> obj) = set(['LP'])
+select(value -> obj) = set(['LB'])
 
 Grammar is LL(1).
 
