@@ -9,6 +9,8 @@ class SyntaxError(Exception):
     pass
 
 
+#
+
 class Parser(object):
     """
     Class with basic functionality for parsers.
