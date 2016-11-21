@@ -105,16 +105,16 @@ class JsonParser(Parser):
             raise SyntaxError("Syntax error: no rule for token: {}".format(self.t))
 
     def parse_obj_tag(self):
-        if self.t in [members]:
-            c1 = self.parse_members(RB)
-        elif self.t in (RB):
+        if self.t in [STRING]:
+            c1 = self.parse_members()
+        elif self.t in [RB]:
             c1 = self.match(RB)
         else:
             raise SyntaxError("Syntax error: no rule for token: {}".format(self.t))
         return (obj_tag, (c1,))
 
     def parse_members(self):
-        if self.t in [keyvalue]:
+        if self.t in [STRING]:
             c1 = self.parse_keyvalue()
             c2 = self.parse_members_tag()
             return (members, (c1, c2))
@@ -126,7 +126,7 @@ class JsonParser(Parser):
             c1 = self.match(COMMA)
             c2 = self.parse_members()
             return (members_tag, (c1, c2))
-        elif self.t in (RB):
+        elif self.t in [RB]:
             c1 = self.match(RB)
             return (members_tag, (c1,))
         else:
@@ -137,7 +137,7 @@ class JsonParser(Parser):
             c1 = self.match(STRING)
         elif self.t in [INT]:
             c1 = self.match(INT)
-        elif self.t in [obj]:
+        elif self.t in [LB]:
             c1 = self.parse_obj()
         else:
             raise SyntaxError("Syntax error: no rule for token: {}".format(self.t))
