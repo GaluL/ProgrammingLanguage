@@ -146,47 +146,112 @@ Analyzing grammar:
     obj_tag -> RB
     members -> keyvalue members_tag
     members_tag -> COMMA members
-    members_tag -> R B
+    members_tag -> RB
     keyvalue -> STRING COLON value
     value -> STRING
     value -> INT
     value -> obj
 
-terminals =  set(['B', 'LB', 'STRING', 'INT', 'R', 'COLON', 'RB', 'COMMA'])
+terminals =  set(['LB', 'STRING', 'INT', 'COLON', 'RB', 'COMMA'])
 nonterminals =  set(['obj', 'value', 'keyvalue', 'members', 'obj_tag', 'members_tag'])
 
 nullable =  set([])
 
-first(B) = set(['B'])
 first(COLON) = set(['COLON'])
 first(COMMA) = set(['COMMA'])
 first(INT) = set(['INT'])
 first(LB) = set(['LB'])
-first(R) = set(['R'])
 first(RB) = set(['RB'])
 first(STRING) = set(['STRING'])
 first(keyvalue) = set(['STRING'])
 first(members) = set(['STRING'])
-first(members_tag) = set(['R', 'COMMA'])
+first(members_tag) = set(['COMMA', 'RB'])
 first(obj) = set(['LB'])
 first(obj_tag) = set(['STRING', 'RB'])
 first(value) = set(['INT', 'LB', 'STRING'])
 
-follow(keyvalue) = set(['R', 'COMMA'])
-follow(members) = set(['R', 'COMMA', 'EOF'])
-follow(members_tag) = set(['R', 'COMMA', 'EOF'])
-follow(obj) = set(['R', 'COMMA', 'EOF'])
-follow(obj_tag) = set(['R', 'COMMA', 'EOF'])
-follow(value) = set(['R', 'COMMA'])
+follow(keyvalue) = set(['COMMA', 'RB'])
+follow(members) = set(['COMMA', 'EOF', 'RB'])
+follow(members_tag) = set(['COMMA', 'EOF', 'RB'])
+follow(obj) = set(['COMMA', 'EOF', 'RB'])
+follow(obj_tag) = set(['COMMA', 'EOF', 'RB'])
+follow(value) = set(['COMMA', 'RB'])
 
 select(keyvalue -> STRING COLON value) = set(['STRING'])
 select(members -> keyvalue members_tag) = set(['STRING'])
-select(members_tag -> R B) = set(['R'])
 select(members_tag -> COMMA members) = set(['COMMA'])
+select(members_tag -> RB) = set(['RB'])
 select(obj -> LB obj_tag) = set(['LB'])
 select(obj_tag -> RB) = set(['RB'])
 select(obj_tag -> members) = set(['STRING'])
 select(value -> INT) = set(['INT'])
+select(value -> STRING) = set(['STRING'])
+select(value -> obj) = set(['LB'])
+
+Grammar is LL(1).
+
+
+Analyzing grammar:
+    obj -> LB obj_tag
+    obj_tag -> members
+    obj_tag -> RB
+    members -> keyvalue members_tag
+    members_tag -> COMMA members
+    members_tag -> RB
+    keyvalue -> STRING COLON value
+    value -> STRING
+    value -> INT
+    value -> obj
+    value -> LS arr
+    arr -> value arr_value
+    arr -> RS
+    arr_value -> COMMA value arr_value
+    arr_value -> RS
+
+terminals =  set(['LB', 'STRING', 'RS', 'INT', 'COLON', 'LS', 'RB', 'COMMA'])
+nonterminals =  set(['arr', 'obj', 'arr_value', 'value', 'keyvalue', 'members', 'obj_tag', 'members_tag'])
+
+nullable =  set([])
+
+first(COLON) = set(['COLON'])
+first(COMMA) = set(['COMMA'])
+first(INT) = set(['INT'])
+first(LB) = set(['LB'])
+first(LS) = set(['LS'])
+first(RB) = set(['RB'])
+first(RS) = set(['RS'])
+first(STRING) = set(['STRING'])
+first(arr) = set(['INT', 'RS', 'LB', 'STRING', 'LS'])
+first(arr_value) = set(['COMMA', 'RS'])
+first(keyvalue) = set(['STRING'])
+first(members) = set(['STRING'])
+first(members_tag) = set(['COMMA', 'RB'])
+first(obj) = set(['LB'])
+first(obj_tag) = set(['STRING', 'RB'])
+first(value) = set(['INT', 'LB', 'STRING', 'LS'])
+
+follow(arr) = set(['COMMA', 'RB', 'RS'])
+follow(arr_value) = set(['COMMA', 'RB', 'RS'])
+follow(keyvalue) = set(['COMMA', 'RB'])
+follow(members) = set(['COMMA', 'EOF', 'RB', 'RS'])
+follow(members_tag) = set(['COMMA', 'EOF', 'RB', 'RS'])
+follow(obj) = set(['COMMA', 'EOF', 'RB', 'RS'])
+follow(obj_tag) = set(['COMMA', 'EOF', 'RB', 'RS'])
+follow(value) = set(['COMMA', 'RB', 'RS'])
+
+select(arr -> RS) = set(['RS'])
+select(arr -> value arr_value) = set(['INT', 'LB', 'STRING', 'LS'])
+select(arr_value -> COMMA value arr_value) = set(['COMMA'])
+select(arr_value -> RS) = set(['RS'])
+select(keyvalue -> STRING COLON value) = set(['STRING'])
+select(members -> keyvalue members_tag) = set(['STRING'])
+select(members_tag -> COMMA members) = set(['COMMA'])
+select(members_tag -> RB) = set(['RB'])
+select(obj -> LB obj_tag) = set(['LB'])
+select(obj_tag -> RB) = set(['RB'])
+select(obj_tag -> members) = set(['STRING'])
+select(value -> INT) = set(['INT'])
+select(value -> LS arr) = set(['LS'])
 select(value -> STRING) = set(['STRING'])
 select(value -> obj) = set(['LB'])
 
