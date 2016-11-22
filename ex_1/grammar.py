@@ -242,7 +242,8 @@ grammar_json__6 = [
     (value, (obj,)),
     (value, (LS, arr)),
     (arr, (value, arr_value)),
-    (arr_value, (COMMA, arr)),
+    (arr, (RS,)),
+    (arr_value, (COMMA, value, arr_value)),
     (arr_value, (RS,))
 ]
 

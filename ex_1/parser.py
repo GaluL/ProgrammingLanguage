@@ -140,24 +140,29 @@ class JsonParser(Parser):
         elif self.t in [LB]:
             c1 = self.parse_obj()
         elif self.t in [LS]:
-            c1 = self.parse_arr()
+            c1 = self.match(LS)
+            c2 = self.parse_arr()
+            return (value, (c1, c2))
         else:
             raise SyntaxError("Syntax error: no rule for token: {}".format(self.t))
         return (value, (c1,))
 
     def parse_arr(self):
-        if self.t in [LS]:
-            c1 = self.match(LS)
+        if self.t in [RS]:
+            c1 = self.match(RS)
+            return (arr, (c1,))
+
+        else:
+            c1 = self.parse_value()
             c2 = self.parse_arr_value()
             return (arr, (c1, c2))
-        else:
-            raise SyntaxError("Syntax error: no rule for token: {}".format(self.t))
 
     def parse_arr_value(self):
         if self.t in [COMMA]:
             c1 = self.match(COMMA)
-            c2 = self.parse_arr()
-            return (arr_value, (c1, c2))
+            c2 = self.parse_value()
+            c3 = self.parse_arr_value()
+            return (arr_value, (c1, c2, c3))
         elif self.t in [RS]:
             c1 = self.match(RS)
             return (arr_value, (c1,))
