@@ -40,10 +40,10 @@ def sos(S, s):
             sp = gamma
             return (S.S2, sp)
 
-    elif type(S) is If and eval_bool_expr(S.b, s) is True:
+    elif type(S) is If and eval_bool_expr(S.b, s) is tt:
         return (S.S1, s)
 
-    elif type(S) is If and eval_bool_expr(S.b, s) is False:
+    elif type(S) is If and eval_bool_expr(S.b, s) is ff:
         return (S.S2, s)
 
     elif type(S) is While:
@@ -73,7 +73,14 @@ if __name__ == '__main__':
                       Comp(Assign('y', Times(Var('y'), Var('x'))),
                            Assign('x', Minus(Var('x'), ALit(1))))))
 
+    egyptian_multiply = While(Not(Eq(Var('b'), ALit(0))),
+                                   Comp(If(Not(Eq(BitAnd(Var('b'), ALit(1)), ALit(0))),
+                                           Assign('c', Plus(Var('c'), Var('a'))), Skip()),
+                                   Comp(Assign('a', BitShiftLeft(Var('a'), ALit(1))),
+                                        Assign('b', BitShiftRight(Var('b'), ALit(1))))))
+
     run_sos(prog, {'x': 5})
+    run_sos(egyptian_multiply, {'a': 84, 'b': 22, 'c': 0})
 
     #
     # --- ADD MORE TESTS HERE ---

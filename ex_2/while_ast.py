@@ -66,10 +66,14 @@ class While(Statement):
     def __str__(self):
         return 'while ({}) do ({})'.format(self.b, self.S)
 
-#
-# --- ADD HERE IN QUESTION 3 ---
-#
-
+class Repeat(Statement):
+    def __init__(self, S, b):
+        self.b = b
+        self.S = S
+    def __repr__(self):
+        return 'Repeat({},{})'.format(self.S, self.b)
+    def __str__(self):
+        return 'Repeat ({}) Until ({})'.format(self.S, self.b)
 
 # Arithmetic Expressions
 
@@ -110,9 +114,28 @@ class Minus(ArithExpr):
     def __repr__(self):
         return 'Minus({}, {})'.format(self.a1, self.a2)
 
-#
-# --- ADD HERE IN QUESTION 1 ---
-#
+class BitShiftRight(ArithExpr):
+    def __init__(self, a1, a2):
+        self.a1 = a1
+        self.a2 = a2
+    def __repr__(self):
+        return 'BitShiftRight({}, {})'.format(self.a1, self.a2)
+
+class BitShiftLeft(ArithExpr):
+    def __init__(self, a1, a2):
+        self.a1 = a1
+        self.a2 = a2
+
+    def __repr__(self):
+        return 'BitShiftLeft({}, {})'.format(self.a1, self.a2)
+
+class BitAnd(ArithExpr):
+    def __init__(self, a1, a2):
+        self.a1 = a1
+        self.a2 = a2
+
+    def __repr__(self):
+        return 'BitAnd({}, {})'.format(self.a1, self.a2)
 
 
 # Boolean Expressions

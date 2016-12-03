@@ -35,29 +35,41 @@ def nos_tree(S, s):
         premises = (t1, t2)
         post_state = spp
 
-    elif type(S) is If and eval_bool_expr(S.b, s) is True:
+    elif type(S) is If and eval_bool_expr(S.b, s) is tt:
         rule = 'if_tt'
         sp, t = nos_tree(S.S1, s)
         premises = (t, )
         post_state = sp
 
-    elif type(S) is If and eval_bool_expr(S.b, s) is False:
+    elif type(S) is If and eval_bool_expr(S.b, s) is ff:
         rule = 'if_ff'
         sp, t = nos_tree(S.S2, s)
         premises = (t, )
         post_state = sp
 
-    elif type(S) is While and eval_bool_expr(S.b, s) is True:
+    elif type(S) is While and eval_bool_expr(S.b, s) is tt:
         rule = 'while_tt'
         sp, t1 = nos_tree(S.S, s)
         spp, t2 = nos_tree(While(S.b, S.S), sp)
         premises = (t1, t2)
         post_state = spp
 
-    elif type(S) is While and eval_bool_expr(S.b, s) is False:
+    elif type(S) is While and eval_bool_expr(S.b, s) is ff:
         rule = 'while_ff'
         premises = ()
         post_state = s
+
+    elif type(S) is Repeat:
+        sp, t1 = nos_tree(S.S, s)
+        if eval_bool_expr(S.b, sp) == tt:
+            rule = 'repeat_tt'
+            premises = (t1,)
+            post_state = sp
+        else:
+            rule = 'repeat_ff'
+            spp, t2 = nos_tree(Repeat(S.b, S.S), sp)
+            premises = (t1, t2)
+            post_state = spp
 
     else:
         assert False # Error
@@ -73,7 +85,20 @@ if __name__ == '__main__':
                       Comp(Assign('y', Times(Var('y'), Var('x'))),
                            Assign('x', Minus(Var('x'), ALit(1))))))
 
+    egyptian_multiply = While(Not(Eq(Var('b'), ALit(0))),
+                                   Comp(If(Not(Eq(BitAnd(Var('b'), ALit(1)), ALit(0))),
+                                           Assign('c', Plus(Var('c'), Var('a'))), Skip()),
+                                   Comp(Assign('a', BitShiftLeft(Var('a'), ALit(1))),
+                                        Assign('b', BitShiftRight(Var('b'), ALit(1))))))
+
     s, tree = nos_tree(prog, {'x': 5})
+    print s
+    print
+    print tree
+    print
+    view_tree(tree)
+
+    s, tree = nos_tree(egyptian_multiply, {'a': 84, 'b': 22, 'c': 0})
     print s
     print
     print tree

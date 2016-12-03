@@ -34,21 +34,29 @@ def nos(S, s):
         spp = nos(S.S2, sp)
         return spp
 
-    elif type(S) is If and eval_bool_expr(S.b, s) is True:
+    elif type(S) is If and eval_bool_expr(S.b, s) == tt:
         sp = nos(S.S1, s)
         return sp
 
-    elif type(S) is If and eval_bool_expr(S.b, s) is False:
+    elif type(S) is If and eval_bool_expr(S.b, s) == ff:
         sp = nos(S.S2, s)
         return sp
 
-    elif type(S) is While and eval_bool_expr(S.b, s) is True:
+    elif type(S) is While and eval_bool_expr(S.b, s) == tt:
         sp = nos(S.S, s)
         spp = nos(While(S.b, S.S), sp)
         return spp
 
-    elif type(S) is While and eval_bool_expr(S.b, s) is False:
+    elif type(S) is While and eval_bool_expr(S.b, s) == ff:
         return s
+
+    elif type(S) is Repeat:
+        sp = nos(S.S, s)
+
+        if eval_bool_expr(S.b, s) == tt:
+            return sp
+        else:
+            return nos(While(S.b, S.S), sp)
 
     else:
         assert False # Error
@@ -60,7 +68,14 @@ if __name__ == '__main__':
                       Comp(Assign('y', Times(Var('y'), Var('x'))),
                            Assign('x', Minus(Var('x'), ALit(1))))))
 
+    egyptian_multiply = While(Not(Eq(Var('b'), ALit(0))),
+                                   Comp(If(Not(Eq(BitAnd(Var('b'), ALit(1)), ALit(0))),
+                                           Assign('c', Plus(Var('c'), Var('a'))), Skip()),
+                                   Comp(Assign('a', BitShiftLeft(Var('a'), ALit(1))),
+                                        Assign('b', BitShiftRight(Var('b'), ALit(1))))))
+
     print nos(prog, {'x': 5})
+    print nos(egyptian_multiply, {'a': 84, 'b': 22, 'c': 0})
 
     #
     # --- ADD MORE TESTS HERE ---
