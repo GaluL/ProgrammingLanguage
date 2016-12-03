@@ -49,6 +49,12 @@ def sos(S, s):
     elif type(S) is While:
         return (If(S.b, Comp(S.S, While(S.b, S.S)), Skip()), s)
 
+    elif type(S) is Repeat and eval_bool_expr(S.b, s) is tt:
+        return (S.S, s)
+
+    elif type(S) is Repeat and eval_bool_expr(S.b, s) is ff:
+        return (Comp(S.S, If(S.b, Skip(), Repeat(S.b, S.S))),s)
+
     else:
         assert False # Error
 
